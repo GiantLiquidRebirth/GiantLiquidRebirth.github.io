@@ -120,18 +120,32 @@ function initializeScrollEffects() {
 function initializeProfileImage() {
     const profileImg = document.getElementById('profile-img');
     
-    // Set default profile image if not found
-    profileImg.addEventListener('error', function() {
-        this.src = 'data:image/svg+xml;charset=UTF-8,%3Csvg width="200" height="200" xmlns="http://www.w3.org/2000/svg"%3E%3Crect width="200" height="200" fill="%23f3f4f6"/%3E%3Ctext x="50%25" y="50%25" font-size="16" text-anchor="middle" dy=".3em" fill="%236b7280"%3E李月%3C/text%3E%3C/svg%3E';
-    });
-    
-    // Add click effect
-    profileImg.addEventListener('click', function() {
-        this.style.transform = 'scale(1.1)';
-        setTimeout(() => {
-            this.style.transform = 'scale(1)';
-        }, 200);
-    });
+    if (profileImg) {
+        // Add loading event to debug
+        profileImg.addEventListener('load', function() {
+            console.log('✅ Profile image loaded successfully');
+            this.style.opacity = '1';
+        });
+        
+        // Set default profile image if not found
+        profileImg.addEventListener('error', function() {
+            console.log('❌ Profile image failed to load, using fallback');
+            this.src = 'data:image/svg+xml;charset=UTF-8,%3Csvg width="400" height="400" xmlns="http://www.w3.org/2000/svg"%3E%3Crect width="400" height="400" fill="%23f3f4f6"/%3E%3Ctext x="50%25" y="50%25" font-size="24" text-anchor="middle" dy=".3em" fill="%236b7280"%3E李月%3C/text%3E%3C/svg%3E';
+        });
+        
+        // Add click effect
+        profileImg.addEventListener('click', function() {
+            this.style.transform = 'scale(1.1)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 200);
+        });
+        
+        // Force reload if needed
+        if (profileImg.complete && profileImg.naturalHeight === 0) {
+            profileImg.src = profileImg.src + '?t=' + Date.now();
+        }
+    }
 }
 
 // ===== STATISTICS =====
